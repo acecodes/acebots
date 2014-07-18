@@ -1,4 +1,5 @@
 import logging, json, importio, latch, config
+from random import randint
 
 client = importio.importio(user_id=config.user_id, api_key=config.api_key, host="https://query.import.io")
 
@@ -54,29 +55,18 @@ client.query({
   }
 }, callback)
 
-print "Queries dispatched, now waiting for results"
-
-# Now we have issued all of the queries, we can "await" on the latch so that we know when it is all done
 queryLatch.await()
 
-print "Latch has completed, all results returned"
-
-# It is best practice to disconnect when you are finished sending queries and getting data - it allows us to
-# clean up resources on the client and the server
 client.disconnect()
 
 
-
-# Now we can print out the data we got
-print "All data received:"
-
-def sorter(results, index):
-  company_original = results[index]
+def stocks(number, random=False):
+  if random == True:
+    number = randint(0, 20)
+  company_original = dataRows[number]
   keys = company_original.keys()
   values = company_original.values()
 
   company = dict(zip(keys, values))
 
   return company
-
-print sorter(dataRows, 1)
