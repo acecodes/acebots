@@ -1,3 +1,4 @@
 *_login.*
 *.pyc
 config.py
+*config*.py
