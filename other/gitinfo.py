@@ -11,7 +11,7 @@ class User:
 		self.body = self.soup.get_text()
 
 	def commit_streak(self):
-		return self.soup.find_all('span', {'class':'num'})
+		return self.soup.find_all('div', {'class':'contrib-details'})
 
 if __name__ == '__main__':
 	AceCodes = User('acecodes') # Using my username as a test
