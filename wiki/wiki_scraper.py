@@ -20,10 +20,7 @@ class WikiScrape:
 		self.soup = BeautifulSoup(self.data)
 		self.body = self.soup.get_text()
 		self.infoboxes = self.soup.find_all('table', {"class":"infobox"})
-	
-	# Pull images for each potential flashcard	
-	def pull_images(self):
-		pass
+		self.text = self.soup.find_all('p')
 
 	def regex(self, string):
 		return findall(string, self.body)
@@ -34,3 +31,4 @@ Neuron = WikiScrape('Neuron')
 if __name__ == '__main__':
 	# Test with Neuron Wikipedia page
 	print(Neuron.infoboxes)
+	print(Neuron.text[0]) # Introductory paragraph
