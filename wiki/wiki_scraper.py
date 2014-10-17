@@ -4,6 +4,10 @@ import time
 from datetime import datetime, date
 from re import findall, sub
 from bs4 import BeautifulSoup
+import os
+from flask import Flask, render_template
+
+app = Flask(__name__)
 
 class WikiScrape:
 
@@ -25,10 +29,12 @@ class WikiScrape:
 	def regex(self, string):
 		return findall(string, self.body)
 
-
-Neuron = WikiScrape('Neuron')
+@app.route('/')
+def index():
+	Neuron = WikiScrape('Neuron') # Test with Neuron Wikipedia page
+	info = Neuron.infoboxes
+	text = Neuron.text
+	return render_template('index.html', info=info, text=text, len=len)	
 
 if __name__ == '__main__':
-	# Test with Neuron Wikipedia page
-	print(Neuron.infoboxes)
-	print(Neuron.text[0]) # Introductory paragraph
+	app.run(debug=True)

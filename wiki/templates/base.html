@@ -1,0 +1,28 @@
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>WikiScraper</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}" />
+  <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
+
+</head>
+
+<body>
+{% block fullcontent %}
+	
+	{% block maincontent %}
+		
+	{% endblock %}
+
+
+{% endblock %}
+
+<footer>
+{% block footer %}
+	
+{% endblock %}
+</footer>
+
+</body>
+
