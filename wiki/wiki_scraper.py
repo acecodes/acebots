@@ -5,9 +5,21 @@ from datetime import datetime, date
 from re import findall, sub
 from bs4 import BeautifulSoup
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request, session, redirect, url_for, flash
+from flask_wtf import Form
+from wtforms import StringField, SubmitField
+from wtforms.validators import Required, Length
 
 app = Flask(__name__)
+
+CSRF_ENABLED = True
+
+app.config.from_object('config')
+
+
+class WikiForm(Form):
+	subject = StringField('What would you like to learn about?', validators=[Required(), Length(min=1, max=5)])
+	submit = SubmitField('Go')
 
 class WikiScrape:
 
@@ -28,13 +40,23 @@ class WikiScrape:
 
 	def regex(self, string):
 		return findall(string, self.body)
+@app.context_processor
+def data():
+	return {'title':'WikiScrape'}
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-	Neuron = WikiScrape('Neuron') # Test with Neuron Wikipedia page
-	info = Neuron.infoboxes
-	text = Neuron.text
-	return render_template('index.html', info=info, text=text, len=len)	
+	form = WikiForm()
+	if form.validate_on_submit():
+		return redirect(url_for('result', subject=form.subject.data))
+	return render_template('index.html', wiki_form=form)
+
+@app.route('/result', methods=['GET', 'POST'])
+def result():
+	subject = request.form['subject']
+	WikiSubject = WikiScrape(subject)
+
+	return render_template('result.html', subject=subject, text=WikiSubject.text, info=WikiSubject.infoboxes, len=len)
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=True, port=8001)

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block maincontent %}
+
+<div class="row">
+<div class="small-6 large-centered columns">
+
+<div class="infoboxes">
+{% for items in info %}
+{{items|safe}}
+{% endfor %}
+</div>
+
+<div class="intro">
+{{ text[0]|safe }}
+</div>
+
+{% if len(text) > 1 %}
+<a class="readMore" href="#">Read more</a>
+
+<div class="moreText" id="readMore1">
+{% for items in text[1:3] %}
+{{ items|safe }}
+{% endfor %}
+
+</div>
+{% endif %}
+
+{% if len(text) > 3 %}
+<a class="readMore" href="#">Read more</a>
+
+<div class="moreText" id="readMore2">
+{% for items in text[4:] %}
+{{ items|safe }}
+{% endfor %}
+
+</div>
+{% endif %}
+
+</div>
+</div>
+
+{% endblock %}
