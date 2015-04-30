@@ -146,3 +146,12 @@ sample_search_result_data = {
  },
  "lang": "en"
 }
+
+print('\nTweets are accessed via the "text" key:')
+print(sample_search_result_data['text'], '\n')
+
+print('This tweet was retweeted {} times.'.format(
+    sample_search_result_data['retweet_count']))
+
+print('Was this retweeted by the author?',
+      sample_search_result_data['retweeted'])
