@@ -23,6 +23,15 @@ search_results = twitter_api.search.tweets(q=query, count=count)
 
 statuses = search_results['statuses']
 
+def lexical_diversity(tokens):
+    """Checks lexical diversity of input text"""
+    return 1.0 * len(set(tokens))/len(tokens)
+
+def average_words(statuses):
+    """Check average words in statuses"""
+    total_words = sum([len(s.split()) for s in statuses])
+    return 1.0 * total_words/len(statuses)
+
 if __name__ == '__main__':
     # for _ in range(5):
     #     print('Length of statuses', len(statuses))
@@ -61,3 +70,9 @@ if __name__ == '__main__':
         pt.align[label], pt.align['Count'] = 'l', 'r' # Column alignment
         print(pt)
 
+    print('\nLexical diversity')
+    print('Words:', lexical_diversity(words))
+    print('Screen names:', lexical_diversity(screen_names))
+    print('Hash tags:', lexical_diversity(hash_tags))
+    print('\nAverage words')
+    print(average_words(status_texts))
