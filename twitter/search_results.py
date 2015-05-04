@@ -69,6 +69,7 @@ if __name__ == '__main__':
     for label, data in (('Word', words),
                         ('Screen Name', screen_names),
                         ('Hash tag', hash_tags)):
+        # Text table
         pt = PrettyTable(field_names=[label, 'Count'])
         c = Counter(data)
         [pt.add_row(kv) for kv in c.most_common()[:10]]
@@ -98,7 +99,17 @@ if __name__ == '__main__':
 
     word_counts = sorted(Counter(words).values(), reverse=True)
 
-    plt.loglog(word_counts)
-    plt.ylabel('Frequency')
-    plt.xlabel('Word Rank')
+    # Word count graph
+    # plt.loglog(word_counts)
+    # plt.ylabel('Frequency')
+    # plt.xlabel('Word Rank')
+    # plt.show()
+
+    # Retweet histogram
+    counts = [count for count, _, _ in retweets]
+    plt.hist(counts)
+    plt.title('Retweets')
+    plt.xlabel('Bins (number of retweets)')
+    plt.ylabel('Number of tweets in bin')
+
     plt.show()
