@@ -8,6 +8,12 @@ import os
 ACCESS_TOKEN = os.environ.get('FACEBOOK_TOKEN')
 
 
+def prettyprint(object):
+    print(json.dumps(object, indent=1))
+
+graph = facebook.GraphAPI(ACCESS_TOKEN)
+lines = '-' * 10
+
 if __name__ == '__main__':
     """Use requests"""
     # base_url = 'https://graph.facebook.com/me'
@@ -25,12 +31,6 @@ if __name__ == '__main__':
     NOTE: This requires switching to a Python 2 environment
     (As of May 2015)
     """
-
-    def prettyprint(object):
-        print(json.dumps(object, indent=1))
-
-    graph = facebook.GraphAPI(ACCESS_TOKEN)
-    lines = '-' * 10
 
     print(lines)
     print('Me')
