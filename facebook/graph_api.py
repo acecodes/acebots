@@ -90,14 +90,36 @@ if __name__ == '__main__':
 
     # Number of likes per friend
 
-    num_likes_by_friend = {friend: len(likes[friend]) for friend in likes}
+    # num_likes_by_friend = {friend: len(likes[friend]) for friend in likes}
 
-    pt = PrettyTable(field_names=['Friend', 'Number of Likes'])
-    pt.align['Friend'], pt.align['Number of Likes'] = 'l', 'r'
-    [pt.add_row(nlbf)
-     for nlbf in sorted(num_likes_by_friend.items(),
-                        key=itemgetter(1),
-                        reverse=True)]
+    # pt = PrettyTable(field_names=['Friend', 'Number of Likes'])
+    # pt.align['Friend'], pt.align['Number of Likes'] = 'l', 'r'
+    # [pt.add_row(nlbf)
+    #  for nlbf in sorted(num_likes_by_friend.items(),
+    #                     key=itemgetter(1),
+    #                     reverse=True)]
 
-    print('Number of likes per friend')
+    # print('Number of likes per friend')
+    # print(pt)
+
+    # Likes in common with friends
+    my_likes = [like['name'] for like in graph.get_connections('me', 'likes')['data']]
+
+    pt = PrettyTable(field_names=['Name'])
+    pt.align = 'l'
+    [pt.add_row((ml,)) for ml in my_likes]
+    print('\nMy likes')
     print(pt)
+
+    friends_likes = Counter([like['name']
+                         for friend in likes
+                           for like in likes[friend]
+                               if like.get('name')])
+
+    common_likes = list(set(my_likes) & set(friends_likes))
+
+    pt2 = PrettyTable(field_names=['Name'])
+    pt2.align = 'l'
+    [pt2.add_row((cl,)) for cl in common_likes]
+    print('\nMy common likes with friends')
+    print(pt2)
