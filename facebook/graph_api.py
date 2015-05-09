@@ -7,6 +7,7 @@ import facebook
 import requests
 import json
 import os
+import networkx as nx
 
 """Nope!"""
 ACCESS_TOKEN = os.environ.get('FACEBOOK_TOKEN')
@@ -103,23 +104,44 @@ if __name__ == '__main__':
     # print(pt)
 
     # Likes in common with friends
-    my_likes = [like['name'] for like in graph.get_connections('me', 'likes')['data']]
+    # my_likes = [like['name'] for like in graph.get_connections('me', 'likes')['data']]
 
-    pt = PrettyTable(field_names=['Name'])
-    pt.align = 'l'
-    [pt.add_row((ml,)) for ml in my_likes]
-    print('\nMy likes')
-    print(pt)
+    # pt = PrettyTable(field_names=['Name'])
+    # pt.align = 'l'
+    # [pt.add_row((ml,)) for ml in my_likes]
+    # print('\nMy likes')
+    # print(pt)
 
-    friends_likes = Counter([like['name']
-                         for friend in likes
-                           for like in likes[friend]
-                               if like.get('name')])
+    # friends_likes = Counter([like['name']
+    #                      for friend in likes
+    #                        for like in likes[friend]
+    #                            if like.get('name')])
 
-    common_likes = list(set(my_likes) & set(friends_likes))
+    # common_likes = list(set(my_likes) & set(friends_likes))
 
-    pt2 = PrettyTable(field_names=['Name'])
-    pt2.align = 'l'
-    [pt2.add_row((cl,)) for cl in common_likes]
-    print('\nMy common likes with friends')
-    print(pt2)
+    # pt2 = PrettyTable(field_names=['Name'])
+    # pt2.align = 'l'
+    # [pt2.add_row((cl,)) for cl in common_likes]
+    # print('\nMy common likes with friends')
+    # print(pt2)
+
+    # Construct graph of mutual friends with NetworkX
+    friends = [(friend['id'], friend['name'],)
+               for friend in graph.get_connections('me', 'friends')['data']]
+
+    url = 'https://graph.facebook.com/me/mutualfriends/%s?access_token=%s'
+
+    mutual_friends = {}
+
+    # May take a while, as this spawns a new request for each iteration
+    for friend_id, friend_name in friends:
+        r = requests.get(url % (friend_id, ACCESS_TOKEN,))
+        response_data = json.loads(r.content)['data']
+        mutual_friends[friend_name] = [data['name'] for data in response_data]
+
+    nxg = nx.Graph()
+
+    [nxg.add_edge('me', mf) for mf in mutual_friends]
+    [nxg.add_edge(f1, f2) for f1 in mutual_friends for f2 in mutual_friends[f1]]
+
+    print(nxg)
