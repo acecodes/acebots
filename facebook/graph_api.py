@@ -126,22 +126,39 @@ if __name__ == '__main__':
     # print(pt2)
 
     # Construct graph of mutual friends with NetworkX
-    friends = [(friend['id'], friend['name'],)
-               for friend in graph.get_connections('me', 'friends')['data']]
+    # friends = [(friend['id'], friend['name'],)
+    #            for friend in graph.get_connections('me', 'friends')['data']]
 
-    url = 'https://graph.facebook.com/me/mutualfriends/%s?access_token=%s'
+    # url = 'https://graph.facebook.com/me/mutualfriends/%s?access_token=%s'
 
-    mutual_friends = {}
+    # mutual_friends = {}
 
-    # May take a while, as this spawns a new request for each iteration
-    for friend_id, friend_name in friends:
-        r = requests.get(url % (friend_id, ACCESS_TOKEN,))
-        response_data = json.loads(r.content)['data']
-        mutual_friends[friend_name] = [data['name'] for data in response_data]
+    # # May take a while, as this spawns a new request for each iteration
+    # for friend_id, friend_name in friends:
+    #     r = requests.get(url % (friend_id, ACCESS_TOKEN,))
+    #     response_data = json.loads(r.content)['data']
+    #     mutual_friends[friend_name] = [data['name'] for data in response_data]
 
-    nxg = nx.Graph()
+    # nxg = nx.Graph()
 
-    [nxg.add_edge('me', mf) for mf in mutual_friends]
-    [nxg.add_edge(f1, f2) for f1 in mutual_friends for f2 in mutual_friends[f1]]
+    # [nxg.add_edge('me', mf) for mf in mutual_friends]
+    # [nxg.add_edge(f1, f2) for f1 in mutual_friends for f2 in mutual_friends[f1]]
 
-    print(nxg)
+    # print(nxg)
+
+    # Find cliques (graph theory cliques, not actual cliques) in mutual friendships
+    cliques = [c for c in nx.find_cliques(nxg)]
+
+    num_cliques = len(cliques)
+
+    clique_sizes = [len(c) for c in cliques]
+    max_clique_size = max(clique_sizes)
+    avg_clique_size = sum(clique_sizes) / num_cliques
+
+    max_cliques = [c for c in cliques if len(c) == max_clique_size]
+
+    num_max_cliques = len(max_cliques)
+
+    max_clique_sets = [set(c) for c in max_cliques]
+    friends_in_all_max_cliques = list(reduce(lambda x, y: x.intersection(y),
+                                      max_clique_sets))
