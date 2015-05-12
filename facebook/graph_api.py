@@ -147,6 +147,7 @@ if __name__ == '__main__':
     # print(nxg)
 
     # Find cliques (graph theory cliques, not actual cliques) in mutual friendships
+    nxg = nx.Graph()
     cliques = [c for c in nx.find_cliques(nxg)]
 
     num_cliques = len(cliques)
